@@ -6,6 +6,9 @@ package jpanelimagen;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.Serializable;
 import javax.swing.ImageIcon;
@@ -19,6 +22,9 @@ public class JPanelImagen extends JPanel implements Serializable{
 
     
     private ImagenFondo imagenFondo;
+    private boolean ratonPresionado=false;
+    private Point puntoPresion;
+    private ArrastreListener arrastreListener;
 
      public ImagenFondo getImagenFondo() {
         return imagenFondo;
@@ -26,9 +32,37 @@ public class JPanelImagen extends JPanel implements Serializable{
 
     public void setImagenFondo(ImagenFondo imagenFondo) {
         this.imagenFondo = imagenFondo;
+        repaint();
     }
     public JPanelImagen(){
+        this.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if(ratonPresionado){
+                    Point posicionActual = e.getPoint();
+                    if((Math.abs(puntoPresion.x)-posicionActual.x)>50){
+                        if(arrastreListener!=null){
+                            arrastreListener.arrastre();
+                        }
+                        
+                    }
+                }
+                ratonPresionado=false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                ratonPresionado=true;
+                puntoPresion=e.getPoint();
+            }
         
+    });
+    }
+    public void addArrastreListener(ArrastreListener arrastreListener){
+        this.arrastreListener=arrastreListener;
+    }
+    public void removeArrastreListener(ArrastreListener arrastreListener){
+        this.arrastreListener=null;
     }
    @Override
    protected void paintComponent(Graphics g){
