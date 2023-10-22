@@ -26,7 +26,8 @@ public class ImagenFondoPropertyEditorSupport extends PropertyEditorSupport{
 
     @Override
     public String getJavaInitializationString() {
-        return super.getJavaInitializationString();
+        ImagenFondo imagenFondo = imagenFondoPanel.getSelectedValue();
+        return "new jpanelimagen.ImagenFondo("+"new java.io.File(\""+imagenFondo.getRutaImagen().getAbsolutePath()+"\"),"+imagenFondo.getOpacidad()+"f)";
     }
 
     @Override
